@@ -9,15 +9,17 @@ const GamePage = () => {
   const [opponentSeconds, setOpponentSeconds] = useState(600);
   const [playerTurn, setPlayerTurn] = useState(true);
   const [showSquaresIds, setShowSquaresIds] = useState(true);
-
+  const [runClock, setRunClock] = useState(false);
 
   useEffect(() => {
-    if (!!playerTurn) {
-      setTimeout(() => setPlayerSeconds(playerSeconds - 1), 1000);
-    } else {
-      setTimeout(() => setOpponentSeconds(opponentSeconds - 1), 1000);
+    if (runClock) {
+      if (!!playerTurn) {
+        setTimeout(() => setPlayerSeconds(playerSeconds - 1), 1000);
+      } else {
+        setTimeout(() => setOpponentSeconds(opponentSeconds - 1), 1000);
+      }
     }
-  }, [opponentSeconds, playerSeconds, playerTurn]);
+  }, [opponentSeconds, playerSeconds, playerTurn, runClock]);
 
   return (
     <div className={styles.game_page}>
@@ -29,8 +31,9 @@ const GamePage = () => {
 
       <div style={{ position: 'relative' }}>
         <InGameOptions
-          onChangeClock={() => setPlayerTurn(prevTurn => !prevTurn)}
+          onChangeClock={() => setRunClock(prevState => !prevState)}
           enableSquaresIds={() => setShowSquaresIds(prevState => !prevState)}
+          changeTurn={() => setPlayerTurn(prevState => !prevState)}
         />
 
         <ChessBoard showSquaresIds={showSquaresIds}/>

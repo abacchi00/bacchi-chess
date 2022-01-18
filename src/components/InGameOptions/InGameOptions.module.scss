@@ -23,13 +23,23 @@
     color: var(--cyber-1);
   }
 
-  &:hover {
+  &.pressed {
     background-color: var(--cyber-1);
 
     svg {
       color: var(--cyber-2);
     }
+  }
 
+  &.spring {
+    background-color: var(--cyber-3);
+
+    svg {
+      color: var(--cyber-5);
+    }
+  }
+
+  &:hover {
     cursor: pointer;
   }
 
