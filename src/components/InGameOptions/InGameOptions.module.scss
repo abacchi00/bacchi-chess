@@ -1,0 +1,40 @@
+.options_container {
+  position: absolute;
+  left: -80px;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  justify-content: center;
+  height: 576px;
+}
+
+.icon_button {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  transition: background-color 200ms, box-shadow 50ms, transform 50ms;
+  background-color: var(--cyber-2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 1px 1px 2px 0px var(--cyber-2);
+
+  svg {
+    color: var(--cyber-1);
+  }
+
+  &:hover {
+    background-color: var(--cyber-1);
+
+    svg {
+      color: var(--cyber-2);
+    }
+
+    cursor: pointer;
+  }
+
+  &:active {
+    box-shadow: none;
+    transform: translate(2px, 2px);
+  }
+}

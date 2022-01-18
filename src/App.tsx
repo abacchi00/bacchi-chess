@@ -1,24 +1,23 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import './styles/global.scss';
+import styles from './App.module.scss';
+import { GamePage } from './pages/GamePage';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className={styles.app_container}>
+      <div className={styles.header}>
+        <div className={styles.logo}>
+          BacchiChess
+        </div>
+      </div>
+
+      <div className={styles.content}>
+        <GamePage />
+      </div>
+
+      <div className={styles.footer}>
+        Developed by André Rossini Bacchi | 2022
+      </div>
     </div>
   );
 }

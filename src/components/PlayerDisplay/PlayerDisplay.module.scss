@@ -1,0 +1,44 @@
+.container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 576px;
+  height: 96px;
+
+  &.opponent {
+    flex-direction: row-reverse;
+  }
+}
+
+.clock {
+  font-size: 32px;
+  color: var(--cyber-3);
+
+  &.my_turn {
+    color: var(--cyber-1);
+  }
+}
+
+.player_info {
+  display: flex;
+  align-items: center;
+  flex-direction: row-reverse;
+  color: var(--cyber-1);
+  gap: 16px;
+
+  &.opponent {
+    flex-direction: row;
+  }
+}
+
+.player_img {
+  border-radius: 50%;
+  border: 2px solid var(--cyber-1);
+  height: 64px;
+  width: 64px;
+
+  img {
+    height: 64px;
+    border-radius: 50%;
+  }
+}
