@@ -1,4 +1,9 @@
+import { useState } from 'react';
+
+import { PiecePosition } from '../../models/chess_piece';
 import { ChessSquare } from '../ChessSquare';
+
+import { BoardPiece, initialBoardState, squaresProps } from './ChessBoard.utils';
 import styles from './ChessBoard.module.scss';
 
 interface Props {
@@ -6,79 +11,70 @@ interface Props {
 }
 
 const ChessBoard = ({ showSquaresIds }: Props) => {
+  const [boardPieces, setBoardPieces] = useState(initialBoardState);
+
+  const [selectedPiece, setSelectedPiece] = useState<BoardPiece | null>(null);
+  const [possibleMoves, setPossibleMoves] = useState<PiecePosition[]>([]);
+
+  const selectPiece = (pieceKey: BoardPiece) => {
+    setSelectedPiece(pieceKey);
+
+    setPossibleMoves(boardPieces[pieceKey].possibleSquares);
+  }
+
+  const changePosition = (newPosition: PiecePosition) => {
+    if (!selectedPiece || !isInPossibleMoves(newPosition)) return;
+
+    const newPiece = boardPieces[selectedPiece];
+    newPiece.setPosition(newPosition);
+
+    setBoardPieces(prevPieces => ({ ...prevPieces, [selectedPiece]: newPiece }));
+    setSelectedPiece(null);
+    setPossibleMoves([]);
+  }
+
+  const isInPossibleMoves = (coordinate: PiecePosition) => {
+    return possibleMoves.some(possibleCoordinate => possibleCoordinate.x === coordinate.x && possibleCoordinate.y === coordinate.y)
+  }
+
+  console.log('rerender');
+
   return (
     <div className={styles.board}>
-      <ChessSquare id="a8" showId={showSquaresIds} />
-      <ChessSquare id="b8" showId={showSquaresIds} isDarkSquare />
-      <ChessSquare id="c8" showId={showSquaresIds}/>
-      <ChessSquare id="d8" showId={showSquaresIds} isDarkSquare />
-      <ChessSquare id="e8" showId={showSquaresIds}/>
-      <ChessSquare id="f8" showId={showSquaresIds} isDarkSquare />
-      <ChessSquare id="g8" showId={showSquaresIds} />
-      <ChessSquare id="h8" showId={showSquaresIds} isDarkSquare />
+      {squaresProps.map(row =>
+        row.map(props =>
+          <ChessSquare
+            showId={showSquaresIds}
+            onClick={() => changePosition(props.coordinate)}
+            highlight={isInPossibleMoves(props.coordinate)}
+            {...props}
+          />
+        )
+      )}
 
-      <ChessSquare id="a7" showId={showSquaresIds} isDarkSquare />
-      <ChessSquare id="b7" showId={showSquaresIds} />
-      <ChessSquare id="c7" showId={showSquaresIds} isDarkSquare />
-      <ChessSquare id="d7" showId={showSquaresIds} />
-      <ChessSquare id="e7" showId={showSquaresIds} isDarkSquare />
-      <ChessSquare id="f7" showId={showSquaresIds} />
-      <ChessSquare id="g7" showId={showSquaresIds} isDarkSquare />
-      <ChessSquare id="h7" showId={showSquaresIds} />
+      {Object.keys(boardPieces).map(key => {
+        const pieceKey = key as BoardPiece;
 
-      <ChessSquare id="a6" showId={showSquaresIds} />
-      <ChessSquare id="b6" showId={showSquaresIds} isDarkSquare />
-      <ChessSquare id="c6" showId={showSquaresIds} />
-      <ChessSquare id="d6" showId={showSquaresIds} isDarkSquare />
-      <ChessSquare id="e6" showId={showSquaresIds} />
-      <ChessSquare id="f6" showId={showSquaresIds} isDarkSquare />
-      <ChessSquare id="g6" showId={showSquaresIds} />
-      <ChessSquare id="h6" showId={showSquaresIds} isDarkSquare />
+        const piece = boardPieces[pieceKey];
 
-      <ChessSquare id="a5" showId={showSquaresIds} isDarkSquare />
-      <ChessSquare id="b5" showId={showSquaresIds} />
-      <ChessSquare id="c5" showId={showSquaresIds} isDarkSquare />
-      <ChessSquare id="d5" showId={showSquaresIds} />
-      <ChessSquare id="e5" showId={showSquaresIds} isDarkSquare />
-      <ChessSquare id="f5" showId={showSquaresIds} />
-      <ChessSquare id="g5" showId={showSquaresIds} isDarkSquare />
-      <ChessSquare id="h5" showId={showSquaresIds} />
-
-      <ChessSquare id="a4" showId={showSquaresIds} />
-      <ChessSquare id="b4" showId={showSquaresIds} isDarkSquare />
-      <ChessSquare id="c4" showId={showSquaresIds} />
-      <ChessSquare id="d4" showId={showSquaresIds} isDarkSquare />
-      <ChessSquare id="e4" showId={showSquaresIds} />
-      <ChessSquare id="f4" showId={showSquaresIds} isDarkSquare />
-      <ChessSquare id="g4" showId={showSquaresIds} />
-      <ChessSquare id="h4" showId={showSquaresIds} isDarkSquare />
-
-      <ChessSquare id="a3" showId={showSquaresIds} isDarkSquare />
-      <ChessSquare id="b3" showId={showSquaresIds} />
-      <ChessSquare id="c3" showId={showSquaresIds} isDarkSquare />
-      <ChessSquare id="d3" showId={showSquaresIds} />
-      <ChessSquare id="e3" showId={showSquaresIds} isDarkSquare />
-      <ChessSquare id="f3" showId={showSquaresIds} />
-      <ChessSquare id="g3" showId={showSquaresIds} isDarkSquare />
-      <ChessSquare id="h3" showId={showSquaresIds} />
-
-      <ChessSquare id="a2" showId={showSquaresIds} />
-      <ChessSquare id="b2" showId={showSquaresIds} isDarkSquare />
-      <ChessSquare id="c2" showId={showSquaresIds} />
-      <ChessSquare id="d2" showId={showSquaresIds} isDarkSquare />
-      <ChessSquare id="e2" showId={showSquaresIds} />
-      <ChessSquare id="f2" showId={showSquaresIds} isDarkSquare />
-      <ChessSquare id="g2" showId={showSquaresIds} />
-      <ChessSquare id="h2" showId={showSquaresIds} isDarkSquare />
-
-      <ChessSquare id="a1" showId={showSquaresIds} isDarkSquare />
-      <ChessSquare id="b1" showId={showSquaresIds} />
-      <ChessSquare id="c1" showId={showSquaresIds} isDarkSquare />
-      <ChessSquare id="d1" showId={showSquaresIds} />
-      <ChessSquare id="e1" showId={showSquaresIds} isDarkSquare />
-      <ChessSquare id="f1" showId={showSquaresIds} />
-      <ChessSquare id="g1" showId={showSquaresIds} isDarkSquare />
-      <ChessSquare id="h1" showId={showSquaresIds} />
+        return (
+          <img
+            onClick={() => selectPiece(pieceKey)}
+            key={key}
+            src={piece.img}
+            alt={key}
+            width={72}
+            height={72}
+            style={{
+              position: 'absolute',
+              top: `calc(${piece.position.x} * 72px)`,
+              left: `calc(${piece.position.y} * 72px)`,
+              cursor: 'pointer',
+              backgroundColor: selectedPiece === pieceKey ? 'rgba(255, 42, 109, 0.5)' : 'transparent',
+            }}
+          />
+        );
+      })}  
     </div>
   );
 };
