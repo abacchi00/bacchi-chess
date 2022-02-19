@@ -1,7 +1,11 @@
 import { useState } from 'react';
 
+import { ChessSquare } from '../../components/ChessSquare';
+
 import { PiecePosition } from '../../models/chess_piece';
-import { ChessSquare } from '../ChessSquare';
+
+
+import { arePositionsEqual } from '../../utils/positions';
 
 import { initialBoardState, SquareState } from './ChessBoard.utils';
 import styles from './ChessBoard.module.scss';
@@ -26,16 +30,16 @@ const ChessBoard = ({ showSquaresIds }: Props) => {
       return newState;
     });
   }
+  
+  const updateSquareState = (position: PiecePosition, changes: Partial<SquareState>) => {
+    updateBoardState([{ position, changes }]);
+  }
 
   const movePiece = (origin: PiecePosition, destination: PiecePosition) => {
     updateBoardState([
       { position: destination, changes: { piece: boardState[origin.x][origin.y].piece } },
       { position: origin, changes: { piece: null } },
     ]);
-  }
-
-  const updateSquareState = (position: PiecePosition, changes: Partial<SquareState>) => {
-    updateBoardState([{ position, changes }]);
   }
 
   const selectSquare = (square: SquareState) => {
@@ -45,11 +49,11 @@ const ChessBoard = ({ showSquaresIds }: Props) => {
   };
 
   const showPossibleMovesFor = (square: SquareState) => {
-    const possibleMoves = square.piece?.getPossibleSquares(square.coordinate) || [];
+    const possibleMovesForSquare = square.piece?.getPossibleSquares(square.coordinate) || [];
 
-    setPossibleMoves(possibleMoves);
+    setPossibleMoves(possibleMovesForSquare);
 
-    const possibleMoveChanges = possibleMoves.map(position => ({
+    const possibleMoveChanges = possibleMovesForSquare.map(position => ({
       position, changes: { possibleMove: true, threatened: !!boardState[position.x][position.y].piece }
     })) || [];
     
@@ -61,11 +65,7 @@ const ChessBoard = ({ showSquaresIds }: Props) => {
 
     setPossibleMoves([]);
 
-    setBoardState(prevState => prevState.map(row => row.map(square => ({ ...square, possibleMove: false, selected: false, threatened: false }))))
-  }
-
-  const arePositionsEqual = (a: PiecePosition, b: PiecePosition) => {
-    return a.x === b.x && a.y === b.y;
+    setBoardState(prevState => prevState.map(row => row.map(square => ({ ...square, possibleMove: false, selected: false, threatened: false }))));
   }
 
   const isPositionInPossibleMoves = (position: PiecePosition) => {

@@ -14,17 +14,19 @@ interface Props {
 }
 
 const ChessSquare = ({ id, showId, piece, squareColor, threatened, selected, possibleMove, onClick }: Props) => {
-  const backgroundColor = selected ? 'rgba(255, 42, 109, 0.5)' : threatened ? 'rgba(255, 255, 0, 0.5)' : 'transparent'
+  const backgroundColor = selected ? 'rgba(255, 42, 109, 0.5)' : threatened ? 'rgba(255, 255, 0, 0.5)' : 'transparent';
   
   return (
-    <div
-      className={clsx(styles.chess_square, { [styles.dark_square]: squareColor === 'dark' })}
-      style={{ gridArea: id, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-      onClick={onClick}
-    >
-      {showId && <div className={styles.square_id}>{id}</div>}
+    <div className={clsx(styles.chess_square, { [styles.dark_square]: squareColor === 'dark' })} style={{ gridArea: id }} onClick={onClick}>
+      {showId &&
+        <div className={styles.square_id}>
+          {id}
+        </div>
+      }
 
-      {possibleMove && <div style={{ width: '24px', height: '24px', backgroundColor: 'rgba(255, 42, 109, 0.5)', borderRadius: '50%' }} />}
+      {possibleMove &&
+        <div style={{ width: '24px', height: '24px', backgroundColor: 'rgba(255, 42, 109, 0.5)', borderRadius: '50%' }} />
+      }
     
       {piece &&
         <img

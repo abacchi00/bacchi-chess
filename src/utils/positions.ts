@@ -1,5 +1,9 @@
 import { PiecePosition } from "../models/chess_piece";
 
+export const arePositionsEqual = (a: PiecePosition, b: PiecePosition): boolean => {
+  return a.x === b.x && a.y === b.y;
+}
+
 export const getDiagonalPositionsFor = (piecePosition: PiecePosition) => {
   return [0,1,2,3,4,5,6,7].flatMap(num => {
     if (piecePosition?.y === num) return [];
@@ -19,5 +23,5 @@ export const getPerpendicularPositionsFor = (piecePosition: PiecePosition) => {
 }
 
 export const filterPositions = (positions: PiecePosition[], piecePosition: PiecePosition) => { // todo take out position of other pieces in the board, now it just takes off the own piece position from the array
-  return positions.filter(({ x, y }) => x !== piecePosition.x || y !== piecePosition.y);
+  return positions.filter(position => !arePositionsEqual(position, piecePosition));
 }

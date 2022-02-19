@@ -1,4 +1,4 @@
-import { filterPositions, getPerpendicularPositionsFor } from "../utils/possible_positions";
+import { filterPositions, getPerpendicularPositionsFor } from "../utils/positions";
 import ChessPiece, { PieceConstructorProps, PiecePosition } from "./chess_piece";
 
 export class Rook extends ChessPiece {

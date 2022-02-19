@@ -1,4 +1,4 @@
-import { getDiagonalPositionsFor, filterPositions } from "../utils/possible_positions";
+import { getDiagonalPositionsFor, filterPositions } from "../utils/positions";
 import ChessPiece, { PieceConstructorProps, PiecePosition } from "./chess_piece";
 
 export class Bishop extends ChessPiece {

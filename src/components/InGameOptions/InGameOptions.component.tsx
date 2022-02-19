@@ -14,27 +14,30 @@ const InGameOptions = ({ onChangeClock, enableSquaresIds, changeTurn }: Props) =
   const [showSquaresIds, setShowSquaresIds] = useState(true);
   const [runClock, setRunClock] = useState(false);
 
+  const handleShowSquaresIds = () => {
+    setShowSquaresIds(prevState => !prevState);
+    
+    enableSquaresIds();
+  };
+  
+  const handleClock = () => {
+    setRunClock(prevState => !prevState);
+    
+    onChangeClock();
+  };
+
   return (
     <div className={styles.options_container}>
-      <div
-        className={clsx(styles.icon_button, { [styles.pressed]: showSquaresIds })}
-        onClick={() => { setShowSquaresIds(prevState => !prevState); enableSquaresIds(); }}
-      >
-        <FiEye size={32}/>
+      <div className={clsx(styles.icon_button, { [styles.pressed]: showSquaresIds })} onClick={handleShowSquaresIds}>
+        <FiEye size={32} />
       </div>
 
-      <div
-        className={clsx(styles.icon_button, { [styles.pressed]: runClock })}
-        onClick={() => { setRunClock(prevState => !prevState); onChangeClock() }}
-      >
-        <FiClock size={32}/>
+      <div className={clsx(styles.icon_button, { [styles.pressed]: runClock })} onClick={handleClock}>
+        <FiClock size={32} />
       </div>
 
-      <div
-        className={clsx(styles.icon_button, { [styles.spring]: true })}
-        onClick={() => changeTurn() }
-      >
-        <FiUsers size={32}/>
+      <div className={clsx(styles.icon_button, { [styles.spring]: true })} onClick={changeTurn}>
+        <FiUsers size={32} />
       </div>
     </div>
   );
