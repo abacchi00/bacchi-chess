@@ -4,7 +4,6 @@ import { ChessSquare } from '../../components/ChessSquare';
 
 import { PiecePosition } from '../../models/chess_piece';
 
-
 import { arePositionsEqual } from '../../utils/positions';
 
 import { initialBoardState, SquareState } from './ChessBoard.utils';
@@ -16,7 +15,6 @@ interface Props {
 
 const ChessBoard = ({ showSquaresIds }: Props) => {
   const [selectedPosition, setSelectedPosition] = useState<PiecePosition | null>(null);
-  const [possibleMoves, setPossibleMoves] = useState<PiecePosition[]>([]);
   const [boardState, setBoardState] = useState<SquareState[][]>(initialBoardState);
 
   const updateBoardState = (updates: Array<{ position: PiecePosition, changes: Partial<SquareState> }>) => {
@@ -51,8 +49,6 @@ const ChessBoard = ({ showSquaresIds }: Props) => {
   const showPossibleMovesFor = (square: SquareState) => {
     const possibleMovesForSquare = square.piece?.getPossibleSquares(square.coordinate) || [];
 
-    setPossibleMoves(possibleMovesForSquare);
-
     const possibleMoveChanges = possibleMovesForSquare.map(position => ({
       position, changes: { possibleMove: true, threatened: !!boardState[position.x][position.y].piece }
     })) || [];
@@ -63,12 +59,12 @@ const ChessBoard = ({ showSquaresIds }: Props) => {
   const clearSquareSelection = () => {
     setSelectedPosition(null);
 
-    setPossibleMoves([]);
-
     setBoardState(prevState => prevState.map(row => row.map(square => ({ ...square, possibleMove: false, selected: false, threatened: false }))));
   }
 
   const isPositionInPossibleMoves = (position: PiecePosition) => {
+    const possibleMoves = boardState.flat().filter(square => square.possibleMove).map(square => square.coordinate);
+    
     return possibleMoves.some(possibleMove => arePositionsEqual(possibleMove, position));
   }
 
