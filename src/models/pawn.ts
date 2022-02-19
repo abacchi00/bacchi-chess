@@ -1,22 +1,22 @@
-import ChessPiece, { PieceConstructorProps } from "./chess_piece";
+import ChessPiece, { PieceConstructorProps, PiecePosition } from "./chess_piece";
 
 export class Pawn extends ChessPiece {
-  constructor({ color, position }: Omit<PieceConstructorProps, 'type'>) {
-    super({ type: 'pawn', color, position });
+  constructor({ color }: Omit<PieceConstructorProps, 'type'>) {
+    super({ type: 'pawn', color });
   }
 
-  getPossibleSquares() {
+  getPossibleSquares(currentPosition: PiecePosition): PiecePosition[] {
     if (this.color === 'light') {
-      if (this.position.x === 6) {
-        return [{ x: 5, y: this.position.y }, { x: 4, y: this.position.y }];
+      if (currentPosition.x === 6) {
+        return [{ x: 5, y: currentPosition.y }, { x: 4, y: currentPosition.y }];
       } else {
-        return [{ x: this.position.x - 1, y: this.position.y }];
+        return [{ x: currentPosition.x - 1, y: currentPosition.y }];
       }
     } else {
-      if (this.position.x === 1) {
-        return [{ x: 2, y: this.position.y }, { x: 3, y: this.position.y }];
+      if (currentPosition.x === 1) {
+        return [{ x: 2, y: currentPosition.y }, { x: 3, y: currentPosition.y }];
       } else {
-        return [{ x: this.position.x + 1, y: this.position.y }];
+        return [{ x: currentPosition.x + 1, y: currentPosition.y }];
       }
     }
   }

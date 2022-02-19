@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { PiecePosition } from '../../models/chess_piece';
 import { ChessSquare } from '../ChessSquare';
 
-import { BoardPiece, initialBoardState, squaresProps } from './ChessBoard.utils';
+import { initialBoardState, SquareState } from './ChessBoard.utils';
 import styles from './ChessBoard.module.scss';
 
 interface Props {
@@ -11,70 +11,93 @@ interface Props {
 }
 
 const ChessBoard = ({ showSquaresIds }: Props) => {
-  const [boardPieces, setBoardPieces] = useState(initialBoardState);
-
-  const [selectedPiece, setSelectedPiece] = useState<BoardPiece | null>(null);
+  const [selectedPosition, setSelectedPosition] = useState<PiecePosition | null>(null);
   const [possibleMoves, setPossibleMoves] = useState<PiecePosition[]>([]);
+  const [boardState, setBoardState] = useState<SquareState[][]>(initialBoardState);
 
-  const selectPiece = (pieceKey: BoardPiece) => {
-    setSelectedPiece(pieceKey);
+  const updateBoardState = (updates: Array<{ position: PiecePosition, changes: Partial<SquareState> }>) => {
+    setBoardState(prevState => {
+      const newState = [...prevState];
 
-    setPossibleMoves(boardPieces[pieceKey].possibleSquares);
+      updates.forEach(({ position: { x, y }, changes }) => {
+        newState[x][y] = { ...prevState[x][y], ...changes };
+      });
+
+      return newState;
+    });
   }
 
-  const changePosition = (newPosition: PiecePosition) => {
-    if (!selectedPiece || !isInPossibleMoves(newPosition)) return;
+  const movePiece = (origin: PiecePosition, destination: PiecePosition) => {
+    updateBoardState([
+      { position: destination, changes: { piece: boardState[origin.x][origin.y].piece } },
+      { position: origin, changes: { piece: null } },
+    ]);
+  }
 
-    const newPiece = boardPieces[selectedPiece];
-    newPiece.setPosition(newPosition);
+  const updateSquareState = (position: PiecePosition, changes: Partial<SquareState>) => {
+    updateBoardState([{ position, changes }]);
+  }
 
-    setBoardPieces(prevPieces => ({ ...prevPieces, [selectedPiece]: newPiece }));
-    setSelectedPiece(null);
+  const selectSquare = (square: SquareState) => {
+    setSelectedPosition(square.coordinate);
+
+    updateSquareState(square.coordinate, { selected: true });
+  };
+
+  const showPossibleMovesFor = (square: SquareState) => {
+    const possibleMoves = square.piece?.getPossibleSquares(square.coordinate) || [];
+
+    setPossibleMoves(possibleMoves);
+
+    const possibleMoveChanges = possibleMoves.map(position => ({
+      position, changes: { possibleMove: true, threatened: !!boardState[position.x][position.y].piece }
+    })) || [];
+    
+    updateBoardState(possibleMoveChanges);
+  }
+
+  const clearSquareSelection = () => {
+    setSelectedPosition(null);
+
     setPossibleMoves([]);
+
+    setBoardState(prevState => prevState.map(row => row.map(square => ({ ...square, possibleMove: false, selected: false, threatened: false }))))
   }
 
-  const isInPossibleMoves = (coordinate: PiecePosition) => {
-    return possibleMoves.some(possibleCoordinate => possibleCoordinate.x === coordinate.x && possibleCoordinate.y === coordinate.y)
+  const arePositionsEqual = (a: PiecePosition, b: PiecePosition) => {
+    return a.x === b.x && a.y === b.y;
+  }
+
+  const isPositionInPossibleMoves = (position: PiecePosition) => {
+    return possibleMoves.some(possibleMove => arePositionsEqual(possibleMove, position));
+  }
+
+  const clickSquare = (position: PiecePosition) => {
+    const square = boardState[position.x][position.y];
+
+    if (!!selectedPosition) {
+      if (isPositionInPossibleMoves(position)) movePiece(selectedPosition, position);
+
+      clearSquareSelection();
+    } else {
+      selectSquare(square);
+
+      showPossibleMovesFor(square);
+    }
   }
 
   console.log('rerender');
 
   return (
     <div className={styles.board}>
-      {squaresProps.map(row =>
-        row.map(props =>
-          <ChessSquare
-            showId={showSquaresIds}
-            onClick={() => changePosition(props.coordinate)}
-            highlight={isInPossibleMoves(props.coordinate)}
-            {...props}
-          />
-        )
-      )}
-
-      {Object.keys(boardPieces).map(key => {
-        const pieceKey = key as BoardPiece;
-
-        const piece = boardPieces[pieceKey];
-
-        return (
-          <img
-            onClick={() => selectPiece(pieceKey)}
-            key={key}
-            src={piece.img}
-            alt={key}
-            width={72}
-            height={72}
-            style={{
-              position: 'absolute',
-              top: `calc(${piece.position.x} * 72px)`,
-              left: `calc(${piece.position.y} * 72px)`,
-              cursor: 'pointer',
-              backgroundColor: selectedPiece === pieceKey ? 'rgba(255, 42, 109, 0.5)' : 'transparent',
-            }}
-          />
-        );
-      })}  
+      {boardState.map(row => row.map(squareProps =>
+        <ChessSquare
+          key={squareProps.id}
+          showId={showSquaresIds}
+          onClick={() => clickSquare(squareProps.coordinate)}
+          {...squareProps}
+        />
+      ))}
     </div>
   );
 };

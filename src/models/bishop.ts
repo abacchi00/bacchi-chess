@@ -1,12 +1,12 @@
 import { getDiagonalPositionsFor, filterPositions } from "../utils/possible_positions";
-import ChessPiece, { PieceConstructorProps } from "./chess_piece";
+import ChessPiece, { PieceConstructorProps, PiecePosition } from "./chess_piece";
 
 export class Bishop extends ChessPiece {
-  constructor({ color, position }: Omit<PieceConstructorProps, 'type'>) {
-    super({ type: 'bishop', color, position });
+  constructor({ color }: Omit<PieceConstructorProps, 'type'>) {
+    super({ type: 'bishop', color });
   }
 
-  getPossibleSquares() {
-    return filterPositions(getDiagonalPositionsFor(this.position), this.position);
+  getPossibleSquares(currentPosition: PiecePosition): PiecePosition[] {
+    return filterPositions(getDiagonalPositionsFor(currentPosition), currentPosition);
   }
 }

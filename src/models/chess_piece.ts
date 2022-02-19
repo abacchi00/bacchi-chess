@@ -7,7 +7,6 @@ export type PiecePosition = { x: number, y: number };
 export interface PieceConstructorProps {
   type: PieceType;
   color: PieceColor;
-  position: PiecePosition;
 }
 
 abstract class ChessPiece {
@@ -15,28 +14,15 @@ abstract class ChessPiece {
 
   color: PieceColor;
 
-  position: PiecePosition;
-
-  possibleSquares: PiecePosition[];
-
   img: any;
 
-  constructor ({ type, color, position }: PieceConstructorProps) {
+  constructor ({ type, color }: PieceConstructorProps) {
     this.type = type;
     this.color = color;
-    this.position = position;
     this.img = pieceImgs[`${type}_${color}`];
-  
-    this.possibleSquares = this.getPossibleSquares();
   }
 
-  abstract getPossibleSquares(): PiecePosition[];
-
-  public setPosition(newPosition: PiecePosition) {
-    this.position = newPosition;
-
-    this.possibleSquares = this.getPossibleSquares();
-  }
+  abstract getPossibleSquares(currentPosition: PiecePosition): PiecePosition[];
 }
 
 export default ChessPiece;
