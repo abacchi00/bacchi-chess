@@ -5,7 +5,7 @@
   width: 576px;
   height: 96px;
 
-  &.opponent {
+  &.reverse {
     flex-direction: row-reverse;
   }
 }
@@ -14,7 +14,7 @@
   font-size: 32px;
   color: var(--cyber-1);
 
-  &.my_turn {
+  &.highlight {
     color: var(--cyber-3);
   }
 }
@@ -26,7 +26,7 @@
   color: var(--cyber-1);
   gap: 16px;
 
-  &.opponent {
+  &.reverse {
     flex-direction: row;
   }
 }

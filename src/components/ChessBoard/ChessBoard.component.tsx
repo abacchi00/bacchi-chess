@@ -9,11 +9,7 @@ import { arePositionsEqual } from '../../utils/positions';
 import { initialBoardState, SquareState } from './ChessBoard.utils';
 import styles from './ChessBoard.module.scss';
 
-interface Props {
-  showSquaresIds: boolean;
-}
-
-const ChessBoard = ({ showSquaresIds }: Props) => {
+const ChessBoard = () => {
   const [selectedPosition, setSelectedPosition] = useState<PiecePosition | null>(null);
   const [boardState, setBoardState] = useState<SquareState[][]>(initialBoardState);
 
@@ -89,7 +85,7 @@ const ChessBoard = ({ showSquaresIds }: Props) => {
       {boardState.map(row => row.map(squareProps =>
         <ChessSquare
           key={squareProps.id}
-          showId={showSquaresIds}
+          showId
           onClick={() => clickSquare(squareProps.coordinate)}
           {...squareProps}
         />
