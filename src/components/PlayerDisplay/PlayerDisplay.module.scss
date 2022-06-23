@@ -25,6 +25,11 @@
   flex-direction: row-reverse;
   color: var(--cyber-1);
   gap: 16px;
+  
+  &.highlight {
+    color: var(--cyber-3);
+    font-weight: 600;
+  }
 
   &.reverse {
     flex-direction: row;
@@ -36,6 +41,10 @@
   border: 2px solid var(--cyber-1);
   height: 64px;
   width: 64px;
+
+  &.highlight {
+    border: 3px solid var(--cyber-3);
+  }
 
   img {
     height: 64px;

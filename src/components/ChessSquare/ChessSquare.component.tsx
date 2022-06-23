@@ -1,45 +1,45 @@
-import clsx from 'clsx';
-import ChessPiece from '../../models/chess_piece';
-import styles from './ChessSquare.module.scss'
+import clsx from "clsx";
 
-interface Props {
-  id: string;
-  showId: boolean;
-  piece: ChessPiece | null;
-  squareColor: 'light' | 'dark';
-  threatened: boolean;
-  selected: boolean;
-  possibleMove: boolean; 
+import { pieceImgs } from "../../assets/piece_imgs";
+import { ISquareState } from "../../models/square";
+import { decodePieceId } from "../../utils/decode_piece_id";
+
+import styles from './ChessSquare.module.scss';
+
+interface Props extends Omit<ISquareState, 'x' | 'y'> {
   onClick: () => void;
 }
 
-const ChessSquare = ({ id, showId, piece, squareColor, threatened, selected, possibleMove, onClick }: Props) => {
-  const backgroundColor = selected ? 'rgba(255, 42, 109, 0.5)' : threatened ? 'rgba(255, 255, 0, 0.5)' : 'transparent';
-  
-  return (
-    <div className={clsx(styles.chess_square, { [styles.dark_square]: squareColor === 'dark' })} style={{ gridArea: id }} onClick={onClick}>
-      {showId &&
-        <div className={styles.square_id}>
-          {id}
-        </div>
-      }
+const ChessSquare = ({ id, type, selected, pieceID, threatID, onClick }: Props) => {
+  const piece = decodePieceId(pieceID);
+  const threat = decodePieceId(threatID);
 
-      {possibleMove &&
-        <div style={{ width: '24px', height: '24px', backgroundColor: 'rgba(255, 42, 109, 0.5)', borderRadius: '50%' }} />
+  const targeted: boolean = !!threat;
+  const threatened: boolean = !!piece && !!threat && threat.team !== piece.team;
+
+  return (
+    <div className={clsx(styles.chess_square, [styles[type]])} style={{ gridArea: id }} onClick={onClick}>
+      <div className={styles.square_id}>
+        {id}
+      </div>
+
+      {targeted && !threatened &&
+        <div className={styles.possible_move_indicator} />
       }
     
       {piece &&
         <img
-          key={id} // todo change
-          alt={id} // todo change
-          src={piece.img}
+          key={id}
+          alt={id}
           width={72}
           height={72}
-          style={{ backgroundColor }}
+          src={pieceImgs[`${piece.type}_${piece.team}`]}
+          className={clsx(styles.piece_img, { [styles.selected]: selected, [styles.threatened]: threatened })}
         />
       }
     </div>
-  );
-};
+  )
+}
 
 export default ChessSquare;
+
