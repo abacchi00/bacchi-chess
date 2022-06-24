@@ -56,7 +56,7 @@ const MatchProvider = ({ children }: Props) => {
 
   const clickSquare = useCallback((square: ISquareState) => {
     const piece = decodePieceId(square.pieceID);
-    
+
     if (!!selectedSquare) {
       if (square.threatID) {
         movePiece(selectedSquare, square);

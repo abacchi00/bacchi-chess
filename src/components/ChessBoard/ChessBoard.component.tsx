@@ -5,16 +5,15 @@ import { useMatchContext } from '../../contexts/match';
 import styles from './ChessBoard.module.scss';
 
 const ChessBoard = () => {
-  const { boardState, clickSquare } = useMatchContext();
+  const { boardState } = useMatchContext();
 
-  console.log('rerender');
+  console.log('rerender board');
 
   return (
     <div className={styles.board}>
       {boardState.map(row => row.map(squareProps =>
         <ChessSquare
           key={squareProps.id}
-          onClick={() => clickSquare(squareProps)}
           {...squareProps}
         />
       ))}
