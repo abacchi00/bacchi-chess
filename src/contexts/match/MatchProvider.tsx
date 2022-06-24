@@ -12,6 +12,9 @@ interface Props {
   children: React.ReactNode;
 }
 
+const pieceMoveAudio = new Audio("/piece_move.mp3");
+const pieceDropAudio = new Audio("/piece_drop.mp3");
+
 const MatchProvider = ({ children }: Props) => {
   const [teamTurn, setTeamTurn] = useState<PieceTeam>('light');
   const [selectedSquare, setSelectedSquare] = useState<ISquareState | null>(null);
@@ -34,6 +37,9 @@ const MatchProvider = ({ children }: Props) => {
       
       return newState;
     });
+
+    if (destinationSquare.pieceID) pieceDropAudio.play();
+    else pieceMoveAudio.play();
   };
 
   const selectSquare = (square: ISquareState) => {
