@@ -1,9 +1,9 @@
 import { ISquareState } from "../models/square";
-import { decodePieceId } from "./decode_piece_id";
+import { DecodedPieceProps, decodePieceId } from "./decode_piece_id";
 
-type TPositiont = { x: number, y: number };
-type TGetTargetedSquaresFunction = (x: number, y: number, boardState: ISquareState[][]) => TPositiont[];
-type TTraverseBoardFunction = (x: number, y: number, boardState: ISquareState[][], xIncrement: number, yIncrement: number) => TPositiont[];
+type TPosition = { x: number, y: number };
+type TGetTargetedSquaresFunction = (x: number, y: number, boardState: ISquareState[][]) => TPosition[];
+type TTraverseBoardFunction = (x: number, y: number, boardState: ISquareState[][], xIncrement: number, yIncrement: number) => TPosition[];
 
 export const getTargetedSquares = (origin: ISquareState, boardState: ISquareState[][]): ISquareState[][] => {
   const piece = decodePieceId(origin.pieceID);
@@ -69,43 +69,34 @@ const getKingTargetedSquares: TGetTargetedSquaresFunction = (x, y, boardState) =
   ].filter(({ x: sx, y: sy }) => isInsideBoard(sx, sy) && !sameTeam(boardState[sx][sy], boardState[x][y]));
 }
 
-// TODO REFACTOR THIS SHIT
-const getPawnTargetedSquares: TGetTargetedSquaresFunction = (x, y, boardState) => {
-  let possibleMoves = [];
+const getPiecePropsFromCoordinate = (x: number, y: number, boardState: ISquareState[][]): DecodedPieceProps => {
+  return isInsideBoard(x, y) ? decodePieceId(boardState[x][y].pieceID) : null;
+}
 
+const getPawnTargetedSquares: TGetTargetedSquaresFunction = (x, y, boardState) => {
   const pawn = decodePieceId(boardState[x][y].pieceID);
 
   if (!pawn) return [];
 
-  if (pawn.team === 'light') {
-    const middleTarget = decodePieceId(boardState[x - 1][y].pieceID);
-    const middleFrontTarget = isInsideBoard(x - 2, y) ? decodePieceId(boardState[x - 2][y].pieceID) : null;
-    const leftTarget = isInsideBoard(x - 1, y - 1) ? decodePieceId(boardState[x - 1][y - 1].pieceID) : null;
-    const rightTarget = isInsideBoard(x - 1, y + 1) ? decodePieceId(boardState[x - 1][y + 1].pieceID) : null;
+  const factor = pawn.team === 'light' ? -1 : 1;
+  const pawnInitialX = pawn.team === 'light' ? 6 : 1;
 
-    if (!middleTarget && !middleFrontTarget && x === 6) possibleMoves.push({ x: x - 2, y });    
+  const middleTarget = getPiecePropsFromCoordinate(x + factor, y, boardState);
+  const middleFrontTarget = getPiecePropsFromCoordinate(x + factor * 2, y, boardState);
+  const leftTarget = getPiecePropsFromCoordinate(x + factor, y - 1, boardState);
+  const rightTarget = getPiecePropsFromCoordinate(x + factor, y + 1, boardState);
 
-    if (!middleTarget) possibleMoves.push({ x: x - 1, y });
+  const middleFrontTargetPosition = (x === pawnInitialX && !middleTarget && !middleFrontTarget) ? [{ x: x + 2 * factor, y }] : [];    
+  const middleTargetPosition = !middleTarget ? [{ x: x + factor, y }] : [];
+  const leftTargetPosition = (leftTarget && leftTarget.team !== pawn.team) ? [{ x: x + factor, y: y - 1 }] : [];
+  const rightTargetPosition = (rightTarget && rightTarget.team !== pawn.team) ? [{ x: x + factor, y: y + 1 }] : [];
 
-    if (leftTarget && leftTarget.team !== pawn.team) possibleMoves.push({ x: x - 1, y: y - 1 });
-    
-    if (rightTarget && rightTarget.team !== pawn.team) possibleMoves.push({ x: x - 1, y: y + 1 });
-  } else {
-    const middleTarget = decodePieceId(boardState[x + 1][y].pieceID);
-    const middleFrontTarget = isInsideBoard(x + 2, y) ? decodePieceId(boardState[x + 2][y].pieceID) : null;
-    const leftTarget = isInsideBoard(x + 1, y - 1) ? decodePieceId(boardState[x + 1][y - 1].pieceID) : null;
-    const rightTarget = isInsideBoard(x + 1, y + 1) ? decodePieceId(boardState[x + 1][y + 1].pieceID) : null;
-
-    if (!middleTarget && !middleFrontTarget && x === 1) possibleMoves.push({ x: x + 2, y });
-
-    if (!middleTarget) possibleMoves.push({ x: x + 1, y });
-
-    if (leftTarget && leftTarget.team !== pawn.team) possibleMoves.push({ x: x + 1, y: y - 1 });
-    
-    if (rightTarget && rightTarget.team !== pawn.team) possibleMoves.push({ x: x + 1, y: y + 1 });
-  }
-  
-  return possibleMoves.filter(({ x: sx, y: sy }) => isInsideBoard(sx, sy) && !sameTeam(boardState[sx][sy], boardState[x][y]));
+  return [
+    ...middleFrontTargetPosition,
+    ...middleTargetPosition,
+    ...leftTargetPosition,
+    ...rightTargetPosition,
+  ];
 }
 
 const getBishopTargetedSquares: TGetTargetedSquaresFunction = (x, y, boardState) => {
