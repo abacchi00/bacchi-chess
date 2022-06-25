@@ -79,7 +79,7 @@ const getPawnTargetedSquares: TGetTargetedSquaresFunction = (x, y, boardState) =
 
   if (pawn.team === 'light') {
     const middleTarget = decodePieceId(boardState[x - 1][y].pieceID);
-    const middleFrontTarget = decodePieceId(boardState[x - 2][y].pieceID);
+    const middleFrontTarget = isInsideBoard(x - 2, y) ? decodePieceId(boardState[x - 2][y].pieceID) : null;
     const leftTarget = isInsideBoard(x - 1, y - 1) ? decodePieceId(boardState[x - 1][y - 1].pieceID) : null;
     const rightTarget = isInsideBoard(x - 1, y + 1) ? decodePieceId(boardState[x - 1][y + 1].pieceID) : null;
 
@@ -92,7 +92,7 @@ const getPawnTargetedSquares: TGetTargetedSquaresFunction = (x, y, boardState) =
     if (rightTarget && rightTarget.team !== pawn.team) possibleMoves.push({ x: x - 1, y: y + 1 });
   } else {
     const middleTarget = decodePieceId(boardState[x + 1][y].pieceID);
-    const middleFrontTarget = decodePieceId(boardState[x + 2][y].pieceID);
+    const middleFrontTarget = isInsideBoard(x + 2, y) ? decodePieceId(boardState[x + 2][y].pieceID) : null;
     const leftTarget = isInsideBoard(x + 1, y - 1) ? decodePieceId(boardState[x + 1][y - 1].pieceID) : null;
     const rightTarget = isInsideBoard(x + 1, y + 1) ? decodePieceId(boardState[x + 1][y + 1].pieceID) : null;
 
