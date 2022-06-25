@@ -1,39 +1,37 @@
-import { DndProvider } from 'react-dnd';
-import { HTML5Backend } from 'react-dnd-html5-backend';
 import { default as firstPlayerMockImg } from '../../assets/eu1.png';
 import { default as secondPlayerMockImg } from '../../assets/math.jpeg';
 
 import { ChessBoard } from '../../components/ChessBoard';
 import { PlayerDisplay } from '../../components/PlayerDisplay';
+
 import { MatchProvider } from '../../contexts/match';
+import { PlayerProvider } from '../../contexts/player';
 
 import styles from './GamePage.module.scss';
 
 const GamePage = () => {
   return (
-    <DndProvider backend={HTML5Backend}>
-      <MatchProvider>
-        <div className={styles.game_page}>
+    <MatchProvider>
+      <div className={styles.game_page}>
+        <PlayerProvider team="dark">
           <PlayerDisplay
             direction="reverse"
-            clockTime="10:00"
             playerImageSrc={secondPlayerMockImg}
             playerName="João das Neves Pereira"
-            team="dark"
           />
+        </PlayerProvider>
+        
+        <ChessBoard />
 
-          <ChessBoard />
-
+        <PlayerProvider team="light">
           <PlayerDisplay
             direction="auto"
-            clockTime="9:59"
             playerImageSrc={firstPlayerMockImg}
             playerName="Dom Pedro II"
-            team="light"
           />
-        </div>
-      </MatchProvider>
-    </DndProvider>
+        </PlayerProvider>
+      </div>
+    </MatchProvider>
   )
 }
 

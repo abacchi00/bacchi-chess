@@ -1,29 +1,26 @@
 import clsx from 'clsx';
-import { useMatchContext } from '../../contexts/match';
-import { PieceTeam } from '../../models/piece';
+
+import { usePlayerContext } from '../../contexts/player';
+
 import styles from './PlayerDisplay.module.scss';
 
 interface Props {
   playerName: string;
   playerImageSrc: string;
-  clockTime: string;
   direction: 'auto' | 'reverse';
-  team: PieceTeam;
 }
 
-const PlayerDisplay = ({ playerImageSrc, playerName, clockTime, direction = 'auto', team }: Props) => {
-  const { teamTurn } = useMatchContext();
-
-  const isPlayerTurn = team === teamTurn;
+const PlayerDisplay = ({ playerImageSrc, playerName, direction = 'auto' }: Props) => {
+  const { timer, turn } = usePlayerContext();
 
   return (
     <div className={clsx(styles.container, { [styles.reverse]: direction === 'reverse' })}>
-      <div className={clsx(styles.clock, { [styles.highlight]: isPlayerTurn })}>
-        {clockTime}
+      <div className={clsx(styles.clock, { [styles.highlight]: turn })}>
+        {Math.floor(timer / 60) + ':' + (timer % 60).toLocaleString('en-US', { minimumIntegerDigits: 2 })}
       </div>
 
-      <div className={clsx(styles.player_info, { [styles.reverse]: direction === 'reverse', [styles.highlight]: isPlayerTurn })}>
-        <div className={clsx(styles.player_img, { [styles.highlight]: isPlayerTurn })}>
+      <div className={clsx(styles.player_info, { [styles.reverse]: direction === 'reverse', [styles.highlight]: turn })}>
+        <div className={clsx(styles.player_img, { [styles.highlight]: turn })}>
           <img src={playerImageSrc} alt="player" />
         </div>
 
