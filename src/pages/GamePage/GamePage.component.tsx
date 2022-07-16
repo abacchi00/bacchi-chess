@@ -20,7 +20,7 @@ const GamePage = () => {
             playerName="João das Neves Pereira"
           />
         </PlayerProvider>
-        
+
         <ChessBoard />
 
         <PlayerProvider team="light">
