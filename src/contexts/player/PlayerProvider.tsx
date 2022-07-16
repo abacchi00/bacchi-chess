@@ -19,7 +19,7 @@ const PlayerProvider = ({ children, team }: Props) => {
 
   useEffect(() => {
     const interval = timer > 0 && turn && setInterval(() => setTimer(prevTimer => prevTimer - 1), 1000)
-  
+
     if (!!interval) return () => clearInterval(interval);
   }, [teamTurn, timer, turn]);
 

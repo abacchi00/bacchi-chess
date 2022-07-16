@@ -57,17 +57,11 @@ const ChessSquare = (squareProps: ISquareState) => {
         <img
           key={pieceID + 'shadow'}
           alt={(pieceID || undefined) + 'shadow'}
-          style={{ opacity: 0.7 }}
-          className={clsx(
-            styles.piece_img,
-            { [styles.selected]: true }, 
-          )}
+          className={clsx(styles.piece_img, { [styles.selected]: true })}
           src={pieceImgs[`${piece.type}_${piece.team}`]}
-          width={72}
-          height={72}
         />
       }
-    
+
       {piece &&
         <img
           draggable={false}
@@ -76,17 +70,17 @@ const ChessSquare = (squareProps: ISquareState) => {
           {...attributes}
           key={pieceID}
           alt={pieceID || undefined}
-          width={72}
-          height={72}
-          style={{ position: transform ? 'absolute' : undefined, zIndex: transform ? '999' : 'auto', transform: transform ? `translate3d(${transform.x}px, ${transform.y}px, 0)` : 'none', cursor: !pieceTeamTurn ? 'not-allowed' : transform ? 'grabbing' : 'grab' }}
+          style={{
+            position: transform ? 'absolute' : undefined,
+            zIndex: transform ? '999' : 'auto',
+            transform: transform ? `translate3d(${transform.x}px, ${transform.y}px, 0)` : 'none',
+            cursor: !pieceTeamTurn ? 'not-allowed' : transform ? 'grabbing' : 'grab'
+          }}
           src={pieceImgs[`${piece.type}_${piece.team}`]}
-          className={clsx(
-            styles.piece_img,
-            {
-              [styles.threatened]: threatened && !isOver,
-              [styles.overlapped_threatened]: isOver && threatened,
-            }
-          )}
+          className={clsx(styles.piece_img, {
+            [styles.threatened]: threatened && !isOver,
+            [styles.overlapped_threatened]: isOver && threatened,
+          })}
         />
       }
     </div>

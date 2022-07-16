@@ -2,8 +2,21 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  width: 576px;
-  height: 96px;
+
+  @media screen and (min-width: 0px) {
+    width: 288px;
+    height: 48px;
+  }
+
+  @media screen and (min-width: 480px) {
+    width: 432px;
+    height: 72px;
+  }
+
+  @media screen and (min-width: 768px) {
+    width: 576px;
+    height: 96px;
+  }
 
   &.reverse {
     flex-direction: row-reverse;
@@ -11,7 +24,18 @@
 }
 
 .clock {
-  font-size: 32px;
+  @media screen and (min-width: 0px) {
+    font-size: 16px;
+  }
+
+  @media screen and (min-width: 480px) {
+    font-size: 24px;
+  }
+
+  @media screen and (min-width: 768px) {
+    font-size: 32px;
+  }
+
   color: var(--cyber-1);
 
   &.highlight {
@@ -25,7 +49,7 @@
   flex-direction: row-reverse;
   color: var(--cyber-1);
   gap: 16px;
-  
+
   &.highlight {
     color: var(--cyber-3);
     font-weight: 600;
@@ -38,16 +62,47 @@
 
 .player_img {
   border-radius: 50%;
-  border: 2px solid var(--cyber-1);
-  height: 64px;
-  width: 64px;
-
-  &.highlight {
-    border: 3px solid var(--cyber-3);
-  }
 
   img {
-    height: 64px;
     border-radius: 50%;
+  }
+
+  @media screen and (min-width: 0px) {
+    height: 32px;
+    width: 32px;
+    img { height: 32px; }
+    border: 1px solid var(--cyber-1);
+  }
+
+  @media screen and (min-width: 480px) {
+    height: 48px;
+    width: 48px;
+    img { height: 48px; }
+    border: 2px solid var(--cyber-1);
+  }
+
+  @media screen and (min-width: 768px) {
+    height: 64px;
+    width: 64px;
+    img { height: 64px; }
+    border: 2px solid var(--cyber-1);
+  }
+
+  &.highlight {
+    border-color: var(--cyber-3);
+  }
+}
+
+.player_name {
+  @media screen and (min-width: 0px) {
+    font-size: 0.5rem;
+  }
+
+  @media screen and (min-width: 480px) {
+    font-size: 0.75rem;
+  }
+
+  @media screen and (min-width: 768px) {
+    font-size: 1rem;
   }
 }

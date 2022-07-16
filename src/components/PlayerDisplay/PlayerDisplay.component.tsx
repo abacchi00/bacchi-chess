@@ -24,7 +24,7 @@ const PlayerDisplay = ({ playerImageSrc, playerName, direction = 'auto' }: Props
           <img src={playerImageSrc} alt="player" />
         </div>
 
-        {playerName}
+        <div className={styles.player_name}>{playerName}</div>
       </div>
     </div>
   )
