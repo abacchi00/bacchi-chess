@@ -26,7 +26,7 @@ const MatchProvider = ({ children }: Props) => {
 
   const movePiece = (originSquare: ISquareState, destinationSquare: ISquareState) => {
     const pieceID = originSquare.pieceID;
-    
+
     setBoardState(prevState => {
       const newState = [...prevState];
 
@@ -34,7 +34,7 @@ const MatchProvider = ({ children }: Props) => {
       newState[originSquare.x][originSquare.y].pieceID = null;
 
       newState[destinationSquare.x][destinationSquare.y].pieceID = pieceID;
-      
+
       return newState;
     });
 
