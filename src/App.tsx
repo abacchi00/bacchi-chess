@@ -2,6 +2,8 @@ import './styles/global.scss';
 import styles from './App.module.scss';
 import { GamePage } from './pages/GamePage';
 
+// teste
+
 function App() {
   return (
     <div className={styles.app_container}>
